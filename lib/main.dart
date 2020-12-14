@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'database/app_database.dart';
 import 'models/contact.dart';
 
-// 8.7
 
 void main() {
   runApp(Bytebank());
@@ -11,9 +10,6 @@ void main() {
     findAll().then((contacts) => debugPrint(contacts.toString()));
   });
 }
-
-// ripple
-
 
 class Bytebank extends StatelessWidget{
   @override
