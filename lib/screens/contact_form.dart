@@ -1,9 +1,12 @@
+import 'package:bytebank_persistence/database/app_database.dart';
 import 'package:bytebank_persistence/models/contact.dart';
+import 'package:bytebank_persistence/models/contact_dao.dart';
 import 'package:flutter/material.dart';
 
 class ContactForm extends StatelessWidget {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _accountNumberController = TextEditingController();
+  final ContactDao _dao = ContactDao();
 
   @override
   Widget build(BuildContext context) {
@@ -42,11 +45,13 @@ class ContactForm extends StatelessWidget {
               child: SizedBox(
                 width: double.maxFinite,
                 child: RaisedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     final String name = _nameController.text;
                     final int accountNumber = int.tryParse(_accountNumberController.text);
                     final Contact newContact = Contact(0, name, accountNumber);
-                    Navigator.pop(context, newContact);
+                    final int id = await _dao.save(newContact);
+                    debugPrint('ID salvo $id');
+                    Navigator.pop(context);
                   },
                   child: Text('Criar contato')
                 ),

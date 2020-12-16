@@ -1,14 +1,13 @@
 import 'package:bytebank_persistence/screens/contacts_list.dart';
+import 'package:bytebank_persistence/screens/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'database/app_database.dart';
 import 'models/contact.dart';
 
+// 11.10
 
 void main() {
   runApp(Bytebank());
-  save(Contact(1, 'Guilherme', 1234)).then((id) {
-    findAll().then((contacts) => debugPrint(contacts.toString()));
-  });
 }
 
 class Bytebank extends StatelessWidget{
@@ -23,7 +22,7 @@ class Bytebank extends StatelessWidget{
           textTheme: ButtonTextTheme.primary
         )
       ),
-      home: ContactsList()
+      home: Dashboard()
     );
   }
 }

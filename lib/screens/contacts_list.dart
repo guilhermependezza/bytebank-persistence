@@ -1,34 +1,59 @@
+import 'package:bytebank_persistence/database/app_database.dart';
 import 'package:bytebank_persistence/models/contact.dart';
+import 'package:bytebank_persistence/models/contact_dao.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'contact_form.dart';
 
-class ContactsList extends StatelessWidget {
-  final List<Contact> contacts = List();
+class ContactsList extends StatefulWidget {
+  @override
+  ContactsListState createState() => ContactsListState();
+}
+
+class ContactsListState extends State<ContactsList> {
+  final ContactDao _dao = ContactDao();
   @override
   Widget build(BuildContext context) {
-    contacts.add(Contact(0, 'Guilherme', 1234));
     return Scaffold(
       appBar: AppBar(
         title: Text('Contatos'),
       ),
-
-      body: ListView.builder(
-        itemBuilder: (context, index) {
-          return ContactItem(contacts[index]);
+      body: FutureBuilder<List<Contact>>(
+        future: _dao.findAll(),
+        initialData: List<Contact>(),
+        builder: (context, snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.active: break;
+            case ConnectionState.none: break;
+            case ConnectionState.waiting:
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [CircularProgressIndicator(), Text('Carregando')],
+                ),
+              );
+              break;
+            case ConnectionState.done:
+              final List<Contact> contacts = snapshot.data;
+              return ListView.builder(
+                itemBuilder: (context, index) {
+                  return ContactItem(contacts[index]);
+                },
+                itemCount: contacts.length,
+              );
+          }
+          return Text('Erro desconhecido');
         },
-        itemCount: contacts.length,
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(
-                builder: (context) => ContactForm()
-              )).then((newContact) => debugPrint(newContact.toString()));
-        },
-        child: Icon(Icons.add)
-      ),
+          onPressed: () async {
+            await Navigator.of(context).push(MaterialPageRoute(builder: (context) => ContactForm()));
+            setState(() {});
+          },
+          child: Icon(Icons.add)),
     );
   }
 }
@@ -42,8 +67,9 @@ class ContactItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
-        title: Text('Guilherme', style: TextStyle(fontSize: 24.0)),
-        subtitle: Text('1234', style: TextStyle(fontSize: 16.0)),
+        title: Text(contact.name, style: TextStyle(fontSize: 24.0)),
+        subtitle: Text(contact.accountNumber.toString(),
+            style: TextStyle(fontSize: 16.0)),
       ),
     );
   }
