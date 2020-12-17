@@ -1,3 +1,4 @@
+import 'package:bytebank_persistence/components/progress.dart';
 import 'package:bytebank_persistence/database/app_database.dart';
 import 'package:bytebank_persistence/models/contact.dart';
 import 'package:bytebank_persistence/models/contact_dao.dart';
@@ -28,13 +29,7 @@ class ContactsListState extends State<ContactsList> {
             case ConnectionState.active: break;
             case ConnectionState.none: break;
             case ConnectionState.waiting:
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [CircularProgressIndicator(), Text('Carregando')],
-                ),
-              );
+              return Progress();
               break;
             case ConnectionState.done:
               final List<Contact> contacts = snapshot.data;

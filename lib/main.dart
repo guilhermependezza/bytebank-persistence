@@ -1,10 +1,8 @@
-import 'package:bytebank_persistence/screens/contacts_list.dart';
+import 'package:bytebank_persistence/http/webclient.dart';
 import 'package:bytebank_persistence/screens/dashboard.dart';
 import 'package:flutter/material.dart';
-import 'database/app_database.dart';
-import 'models/contact.dart';
 
-// 11.10
+// 13.5
 
 void main() {
   runApp(Bytebank());
