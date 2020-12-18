@@ -2,6 +2,7 @@ import 'package:bytebank_persistence/components/progress.dart';
 import 'package:bytebank_persistence/database/app_database.dart';
 import 'package:bytebank_persistence/models/contact.dart';
 import 'package:bytebank_persistence/models/contact_dao.dart';
+import 'package:bytebank_persistence/screens/transaction_form.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -35,7 +36,12 @@ class ContactsListState extends State<ContactsList> {
               final List<Contact> contacts = snapshot.data;
               return ListView.builder(
                 itemBuilder: (context, index) {
-                  return ContactItem(contacts[index]);
+                  final Contact contact = contacts[index];
+                  return ContactItem(contact,
+                   onClick: () {
+                    Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) => TransactionForm(contact)));
+                  },);
                 },
                 itemCount: contacts.length,
               );
@@ -55,13 +61,15 @@ class ContactsListState extends State<ContactsList> {
 
 class ContactItem extends StatelessWidget {
   final Contact contact;
+  final Function onClick;
 
-  ContactItem(this.contact);
+  ContactItem(this.contact, {@required this.onClick});
 
   @override
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
+        onTap: onClick,
         title: Text(contact.name, style: TextStyle(fontSize: 24.0)),
         subtitle: Text(contact.accountNumber.toString(),
             style: TextStyle(fontSize: 16.0)),
